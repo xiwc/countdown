@@ -1,60 +1,98 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <title>jQuery计时器插件TimeCircles演示2</title>
-        <link rel="stylesheet" href="css/TimeCircles.css" />
-    </head>
-    <body>
-        <h1 style="margin: 40px; font: 32px Microsoft Yahei; text-align: center;">jQuery计时器插件TimeCircles演示2</h1>
-        <div class="menu">
-            <a href="index.html">演示1（默认+美化）</a>
-            <a class="cur" href="index_2.html">演示2（带控制）</a>
+
+<head>
+    <meta charset="utf-8">
+    <title>倒计时</title>
+    <link rel="stylesheet" href="css/TimeCircles.css" />
+    <link rel="stylesheet" href="semantic/css/semantic.css">
+</head>
+
+<body style="background: gray;">
+    <h1 style="margin: 40px; font: 32px Microsoft Yahei; text-align: center;">演讲倒计时</h1>
+    <div id="countDownTimer" data-timer="300" style="width: 500px; height: 250px; margin: 0 auto;"></div>
+    <div style="height: 50px;"></div>
+    <div style="text-align: center;">
+        <div id="btnStartOrStop" class="ui vertical animated button big green">
+            <div class="hidden content">开始</div>
+            <div class="visible content">
+                <i class="play sign icon"></i>
+            </div>
         </div>
-        <div class="someTimer" data-timer="900" style="width: 1000px; margin: 0 auto;"></div>
-        <div style="text-align: center;">
-            <button class="start">开始</button>
-            <button class="stop">停止</button>
-            <button class="destroy">清除</button>
+        <div id="btnRestart" class="ui animated fade button big red">
+            <div class="visible content">重新开始</div>
+            <div class="hidden content">
+                重新开始
+            </div>
         </div>
-        <script src="js/jquery-1.7.2.min.js"></script>
-        <script src="js/TimeCircles.js"></script>
-        <script>
-        $(function(){
-        $('.someTimer').TimeCircles({
-        time : {
-        Days: {
-        show: true,
-        text: "天",
-        color: "#FC6"
-        },
-        Hours: {
-        show: true,
-        text: "时",
-        color: "#9CF"
-        },
-        Minutes: {
-        show: true,
-        text: "分",
-        color: "#BFB"
-        },
-        Seconds: {
-        show: true,
-        text: "秒",
-        color: "#F99"
-        }
-        }
+    </div>
+
+    <h1 id="txtWarning" style="margin: 40px; font: 32px Microsoft Yahei; text-align: center; color: red;"></h1>
+
+    <audio id="alarm-ring" preload>
+        <source src="media/ticktac.mp3" type="audio/mpeg" />
+        <source src="media/ticktac.ogg" type="audio/ogg" />
+    </audio>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/TimeCircles.js"></script>
+    <script src="semantic/javascript/semantic.js"></script>
+    <script>
+    $(function() {
+
+        $('#countDownTimer').TimeCircles({
+            start: false,
+            animation: "smooth",
+            count_past_zero: false,
+            time: {
+                Days: {
+                    show: false
+                },
+                Hours: {
+                    show: false
+                },
+                Minutes: {
+                    show: true,
+                    text: "分",
+                    color: "#BFB"
+                },
+                Seconds: {
+                    show: true,
+                    text: "秒",
+                    color: "#F99"
+                }
+            }
         });
-        $('.stop').click(function(){
-        $('.someTimer').TimeCircles().stop();
+
+        $("#countDownTimer").TimeCircles().addListener(function(unit, value, total) {
+            if (total == 120) {
+                document.getElementById('alarm-ring').play();
+            }
+
+            if (total == 0) {
+                document.getElementById('alarm-ring').play();
+                $('#txtWarning').text('演讲结束');
+            }
         });
-        $('.start').click(function(){
-        $('.someTimer').TimeCircles().start();
+
+        $('#btnStartOrStop').click(function() {
+
+            if ($(this).find('.hidden.content').text() == '开始') {
+                $(this).find('.hidden.content').text('暂停');
+                $(this).find('.visible.content').html('<i class="pause icon"></i>');
+                $('#countDownTimer').TimeCircles().start();
+            } else {
+                $(this).find('.hidden.content').text('开始');
+                $(this).find('.visible.content').html('<i class="play sign icon"></i>');
+                $('#countDownTimer').TimeCircles().stop();
+            }
         });
-        $('.destroy').click(function(){
-        $('.someTimer').TimeCircles().destroy();
+        $('#btnRestart').click(function() {
+            $('#countDownTimer').TimeCircles().restart();
+            $('#txtWarning').text('');
         });
-        });
-        </script>
-    </body>
+    });
+    </script>
+</body>
+
 </html>
