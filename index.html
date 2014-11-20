@@ -90,6 +90,11 @@
         $('#btnRestart').click(function() {
             $('#countDownTimer').TimeCircles().restart();
             $('#txtWarning').text('');
+
+            if ($('#btnStartOrStop').find('.hidden.content').text() == '开始') {
+                $('#btnStartOrStop').find('.hidden.content').text('暂停');
+                $('#btnStartOrStop').find('.visible.content').html('<i class="pause icon"></i>');
+            }
         });
     });
     </script>
