@@ -21,7 +21,7 @@
     <div id="particles">
         <div class="intro">
             <h1 style="margin: 40px; font: 60px Microsoft Yahei; text-align: center;">属于你的Show time!</h1>
-            <div id="countDownTimer" data-timer="300" style="width: 500px; height: 250px; margin: 0 auto;"></div>
+            <div id="countDownTimer" data-timer="301" style="width: 500px; height: 250px; margin: 0 auto;"></div>
             <div style="height: 50px;"></div>
             <div style="text-align: center;">
                 <div id="btnStartOrStop" class="ui vertical animated button big green">
@@ -122,18 +122,15 @@
 
         $("#countDownTimer").TimeCircles().addListener(function(unit, value, total) {
 
-            $("#countDownTimer").TimeCircles({
-                time: {
-                    Minutes: {
-                        color: getRandomColor()
-                    },
-                    Seconds: {
-                        color: getRandomColor()
-                    }
-                }
-            });
             if (total == 120) {
                 document.getElementById('alarm-ring').play();
+                $("#countDownTimer").TimeCircles({
+                    time: {
+                        Seconds: {
+                            color: "#BFB"
+                        }
+                    }
+                });
             }
 
             if (total == 0) {
