@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/TimeCircles.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/component.css" />
+    <link rel="stylesheet" href="css/colpick.css" />
     <link rel="stylesheet" href="semantic/css/semantic.css">
 </head>
 
@@ -19,7 +20,7 @@
 
     <div id="particles">
         <div class="intro">
-            <h1 style="margin: 40px; font: 32px Microsoft Yahei; text-align: center;">演讲倒计时</h1>
+            <h1 style="margin: 40px; font: 60px Microsoft Yahei; text-align: center;">属于你的Show time!</h1>
             <div id="countDownTimer" data-timer="300" style="width: 500px; height: 250px; margin: 0 auto;"></div>
             <div style="height: 50px;"></div>
             <div style="text-align: center;">
@@ -30,9 +31,9 @@
                     </div>
                 </div>
                 <div id="btnRestart" class="ui animated fade button big red">
-                    <div class="visible content">重新开始</div>
+                    <div class="visible content">开始计时</div>
                     <div class="hidden content">
-                        重新开始
+                        Ready GO!
                     </div>
                 </div>
             </div>
@@ -51,13 +52,49 @@
 
     <div class="md-overlay"></div>
 
+    <div id="btnSetBkColor" class="ui vertical animated button small" style="position: absolute; top: 5px; left: 5px; opacity: 0.1;">
+        <div class="hidden content">背景色</div>
+        <div class="visible content">
+            <i class="unhide icon"></i>
+        </div>
+    </div>
+
     <script src="js/jquery.js"></script>
     <script src="js/TimeCircles.js"></script>
     <script src='js/jquery.particleground.js'></script>
     <script src="js/modernizr.custom.js"></script>
+    <script src="js/colpick.js"></script>
     <script src="semantic/javascript/semantic.js"></script>
     <script>
     $(function() {
+
+        $('#btnSetBkColor').click(function(event) {
+            $('#btnSetBkColor').colpick({
+                layout: 'hex',
+                submit: 0,
+                colorScheme: 'dark',
+                onChange: function(hsb, hex, rgb, el, bySetColor) {
+                    $('body').css({
+                        background: '#' + hex
+                    });
+                }
+            });
+        }).hover(
+            function() {
+                $(this).css({
+                    opacity: '0.5'
+                });
+            },
+            function() {
+                $(this).css({
+                    opacity: '0.1'
+                });
+            }
+        );
+
+        function getRandomColor() {
+            return '#' + ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
+        }
 
         $('#countDownTimer').TimeCircles({
             start: false,
@@ -84,6 +121,17 @@
         });
 
         $("#countDownTimer").TimeCircles().addListener(function(unit, value, total) {
+
+            $("#countDownTimer").TimeCircles({
+                time: {
+                    Minutes: {
+                        color: getRandomColor()
+                    },
+                    Seconds: {
+                        color: getRandomColor()
+                    }
+                }
+            });
             if (total == 120) {
                 document.getElementById('alarm-ring').play();
             }
