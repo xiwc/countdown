@@ -5,37 +5,56 @@
     <meta charset="utf-8">
     <title>倒计时</title>
     <link rel="stylesheet" href="css/TimeCircles.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/component.css" />
     <link rel="stylesheet" href="semantic/css/semantic.css">
 </head>
 
-<body style="background: gray;">
-    <h1 style="margin: 40px; font: 32px Microsoft Yahei; text-align: center;">演讲倒计时</h1>
-    <div id="countDownTimer" data-timer="300" style="width: 500px; height: 250px; margin: 0 auto;"></div>
-    <div style="height: 50px;"></div>
-    <div style="text-align: center;">
-        <div id="btnStartOrStop" class="ui vertical animated button big green">
-            <div class="hidden content">开始</div>
-            <div class="visible content">
-                <i class="play sign icon"></i>
-            </div>
-        </div>
-        <div id="btnRestart" class="ui animated fade button big red">
-            <div class="visible content">重新开始</div>
-            <div class="hidden content">
-                重新开始
-            </div>
-        </div>
-    </div>
-
-    <h1 id="txtWarning" style="margin: 40px; font: 32px Microsoft Yahei; text-align: center; color: red;"></h1>
+<body>
 
     <audio id="alarm-ring" preload>
         <source src="media/ticktac.mp3" type="audio/mpeg" />
         <source src="media/ticktac.ogg" type="audio/ogg" />
     </audio>
 
+    <div id="particles">
+        <div class="intro">
+            <h1 style="margin: 40px; font: 32px Microsoft Yahei; text-align: center;">演讲倒计时</h1>
+            <div id="countDownTimer" data-timer="300" style="width: 500px; height: 250px; margin: 0 auto;"></div>
+            <div style="height: 50px;"></div>
+            <div style="text-align: center;">
+                <div id="btnStartOrStop" class="ui vertical animated button big green">
+                    <div class="hidden content">开始</div>
+                    <div class="visible content">
+                        <i class="play sign icon"></i>
+                    </div>
+                </div>
+                <div id="btnRestart" class="ui animated fade button big red">
+                    <div class="visible content">重新开始</div>
+                    <div class="hidden content">
+                        重新开始
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="md-modal md-effect-14">
+        <div class="md-content">
+            <h3>演讲时间结束!</h3>
+            <div style="text-align: center;">
+                <p></p>
+                <button class="md-close ui button red">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="md-overlay"></div>
+
     <script src="js/jquery.js"></script>
     <script src="js/TimeCircles.js"></script>
+    <script src='js/jquery.particleground.js'></script>
+    <script src="js/modernizr.custom.js"></script>
     <script src="semantic/javascript/semantic.js"></script>
     <script>
     $(function() {
@@ -71,7 +90,7 @@
 
             if (total == 0) {
                 document.getElementById('alarm-ring').play();
-                $('#txtWarning').text('演讲结束');
+                $('.md-modal').addClass('md-show');
             }
         });
 
@@ -96,6 +115,14 @@
                 $('#btnStartOrStop').find('.visible.content').html('<i class="pause icon"></i>');
             }
         });
+
+        $('#particles').particleground();
+
+        $('.md-modal .md-close').click(function(event) {
+            event.stopPropagation();
+            $(this).parents('.md-modal').removeClass('md-show')
+        });
+
     });
     </script>
 </body>
