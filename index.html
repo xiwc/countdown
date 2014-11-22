@@ -261,6 +261,9 @@
             if (total == 0) {
                 document.getElementById('alarm-ring').play();
 
+                $('#countDownTimer').TimeCircles().rebuild();
+                $('#btnStartOrStop').trigger('click')
+
                 $('#txtTitle').hide();
 
                 var $md = $('#mdWarning');
