@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/component.css" />
     <link rel="stylesheet" href="css/colpick.css" />
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style-music.css" />
     <link rel="stylesheet" href="semantic/css/semantic.css">
 </head>
 
@@ -40,12 +42,64 @@
         </div>
     </div>
 
-    <div class="md-modal md-effect-14">
+    <div class="md-modal md-effect-14" id="mdWarning">
         <div class="md-content">
             <h3>演讲时间结束!</h3>
             <div style="text-align: center;">
                 <p></p>
                 <button class="md-close ui button red">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="md-modal md-effect-18" id="mdMusic" style="opacity: 0.8;">
+        <div class="md-content">
+            <h3>演讲前的音乐前奏</h3>
+            <div>
+                <div class="music-player">
+                    <div class="info">
+                        <div class="left">
+                            <a href="javascript:;" class="icon-shuffle"></a>
+                            <a href="javascript:;" class="icon-heart"></a>
+                        </div>
+                        <div class="center">
+                            <div class="jp-playlist">
+                                <ul>
+                                    <li></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div class="right">
+                            <a href="javascript:;" class="icon-repeat"></a>
+                            <a href="javascript:;" class="icon-share"></a>
+                        </div>
+
+                        <div class="progress jp-seek-bar">
+                            <span class="jp-play-bar" style="width: 0%"></span>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <div class="current jp-current-time">00:00</div>
+                        <div class="play-controls">
+                            <a href="javascript:;" class="icon-previous jp-previous" title="previous"></a>
+                            <a href="javascript:;" class="icon-play jp-play" title="play"></a>
+                            <a href="javascript:;" class="icon-pause jp-pause" title="pause"></a>
+                            <a href="javascript:;" class="icon-next jp-next" title="next"></a>
+                        </div>
+                        <div class="volume-level jp-volume-bar">
+                            <span class="jp-volume-bar-value" style="width: 0%"></span>
+                            <a href="javascript:;" class="icon-volume-up jp-volume-max" title="max volume"></a>
+                            <a href="javascript:;" class="icon-volume-down jp-mute" title="mute"></a>
+                        </div>
+                    </div>
+                    <div id="jquery_jplayer" class="jp-jplayer"></div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="md-close ui button red">关闭</button>
+                </div>
             </div>
         </div>
     </div>
@@ -59,11 +113,21 @@
         </div>
     </div>
 
+    <div id="btnMusic" class="ui vertical animated button small" style="position: absolute; top: 5px; right: 5px; opacity: 0.1;">
+        <div class="hidden content">音乐</div>
+        <div class="visible content">
+            <i class="music icon"></i>
+        </div>
+    </div>
+
     <script src="js/jquery.js"></script>
     <script src="js/TimeCircles.js"></script>
     <script src='js/jquery.particleground.js'></script>
     <script src="js/modernizr.custom.js"></script>
     <script src="js/colpick.js"></script>
+    <script src='js/jquery.jplayer.min.js'></script>
+    <script src='js/jplayer.playlist.min.js'></script>
+
     <script src="semantic/javascript/semantic.js"></script>
     <script>
     $(function() {
@@ -92,8 +156,42 @@
             }
         );
 
+        $('#btnMusic').click(function(event) {
+            $('#mdMusic').removeClass(function(index, cls) {
+
+                var arr = [];
+
+                $.each(cls.split(' '), function(i, n) {
+                    if (n.indexOf('md-effect-') != -1) {
+                        arr.push(n);
+                    }
+                });
+
+                return arr.join(' ');
+            });
+            $('#mdMusic').addClass('md-effect-' + GetRandomNum(1, 19));
+            $('#mdMusic').addClass('md-show');
+        }).hover(
+            function() {
+                $(this).css({
+                    opacity: '0.5'
+                });
+            },
+            function() {
+                $(this).css({
+                    opacity: '0.1'
+                });
+            }
+        );
+
         function getRandomColor() {
             return '#' + ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
+        }
+
+        function GetRandomNum(Min, Max) {
+            var Range = Max - Min;
+            var Rand = Math.random();
+            return (Min + Math.round(Rand * Range));
         }
 
         $('#countDownTimer').TimeCircles({
@@ -135,7 +233,7 @@
 
             if (total == 0) {
                 document.getElementById('alarm-ring').play();
-                $('.md-modal').addClass('md-show');
+                $('#mdWarning').addClass('md-show');
             }
         });
 
@@ -165,8 +263,39 @@
 
         $('.md-modal .md-close').click(function(event) {
             event.stopPropagation();
-            $(this).parents('.md-modal').removeClass('md-show')
+            $(this).parents('.md-modal').removeClass('md-show');
         });
+
+        var playlist = [{
+            title: "Hidden",
+            artist: "Miaow",
+            mp3: "media/i2.mp3",
+            oga: "media/Miaow-02-Hidden.ogg",
+            poster: "img/b1.jpg"
+        }, {
+            title: "Cro Magnon Man",
+            artist: "The Stark Palace",
+            mp3: "media/i1.mp3",
+            oga: "media/TSP-01-Cro_magnon_man.ogg",
+            poster: "img/tumblr_nbmb3j8nU51sq3g2zo1_500.png"
+        }, {
+            title: "Bubble",
+            m4a: "media/Miaow-07-Bubble.m4a",
+            oga: "media/Miaow-07-Bubble.ogg",
+            poster: "img/tumblr_nbe8wsmKuz1rknpqyo1_500.jpg"
+        }];
+
+        var cssSelector = {
+            jPlayer: "#jquery_jplayer",
+            cssSelectorAncestor: ".music-player"
+        };
+
+        var options = {
+            swfPath: "media/Jplayer.swf",
+            supplied: "ogv, m4v, oga, mp3"
+        };
+
+        new jPlayerPlaylist(cssSelector, playlist, options);
 
     });
     </script>
